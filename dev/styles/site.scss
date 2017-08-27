@@ -1,0 +1,33 @@
+$bgColor: #FFF;
+$highlightColor: #ED7D31;
+
+body {
+    background-color: $bgColor;
+    font-family: sans-serif;
+}
+
+ul.navMenu {
+    display: inline-table;
+    list-style: none;
+
+    li {
+        display: inline;
+        margin: 5px;
+        border-top: 3px solid $bgColor;
+        border-top-right-radius: 5px;
+        
+        a {
+            color: #898989;
+            text-transform: uppercase;
+            padding: 5px;
+            padding-top: 5px;
+            text-decoration: none;
+        }
+
+        .active {
+            border-top-right-radius: 5px;
+            border-top: 3px solid $highlightColor;
+            background-color: #F0F0F0;
+        }
+    }
+}
