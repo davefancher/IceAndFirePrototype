@@ -7,7 +7,9 @@ const PagingButtons =
     (props) =>
     {
         var makeButton = (target, label) =>
-            <button onClick={() => props.getPage(target)}>{label}</button>
+            <button onClick={() => props.getPage(target)}>
+                {label}
+            </button>;
 
         var buttons = [];
         if (props.paging.first) buttons.push(makeButton(props.paging.first, "First"));
@@ -15,7 +17,12 @@ const PagingButtons =
         if (props.paging.next) buttons.push(makeButton(props.paging.next, "Next"));
         if (props.paging.last) buttons.push(makeButton(props.paging.last, "Last"));
 
-        return <div>{buttons}</div>;
+        return (
+            <div>
+                <div>{buttons}</div>
+                <div><small>Current Page: {props.paging.currentPage}</small></div>
+            </div>
+        );
     };
 
 const CharacterRow =
@@ -33,7 +40,10 @@ export default class CharacterTable extends Component {
         super(props);
         this.state = {
             characters: [],
-            paging: {}
+            paging: {
+                currentPage: 1,
+                pageSize: 10
+            }
         };
     }
 
@@ -59,7 +69,7 @@ export default class CharacterTable extends Component {
                             pageInfo.url = url;
                             o[match[2]] = pageInfo;
                             return o;
-                        }, {});
+                        }, { currentPage: pageInfo.page, pageSize: pageInfo.pageSize });
 
                 this.setState({
                     characters: response.data,
@@ -71,9 +81,25 @@ export default class CharacterTable extends Component {
             });
     }
 
+    setPageSize (event) {
+        this.getPage({ pageSize: event.target.value, page: 1});
+    }
+
     render () {
         return (
             <div>
+                <div>
+                    <label>
+                        Page Size:&nbsp;
+                        <select value={this.state.paging.pageSize}
+                                onChange={this.setPageSize.bind(this)}>
+                            <option>10</option>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </label>
+                </div>
                 <table>
                     <thead>
                         <tr>
