@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch, NavLink } from "react-router-dom";
 import Home from "../features/home/Home.jsx";
 import CharacterTable from "../features/characters/CharacterTable.jsx";
-import CharacterDetail from "../features/characters/CharacterDetail.jsx";
+//import CharacterDetail from "../features/characters/CharacterDetail.jsx";
 
 export default class App extends Component {
     render () {
@@ -16,12 +16,7 @@ export default class App extends Component {
 
                     <Switch>
                         <Route exact path="/" component={Home} />
-                        <Route path="/characters" render={() =>
-                            <div>
-                                <Route exact path={this.props.path} component={CharacterTable} />
-                                <Route path={this.props.path + ":id"} component={CharacterDetail} />
-                            </div>
-                        } />
+                        <Route path="/characters" component={CharacterTable} />
                     </Switch>
                 </div>
             </BrowserRouter>

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Route, Link } from "react-router-dom";
+import CharacterDetail from "./CharacterDetail.jsx";
 import * as IceAndFireProxy from "../../util/iceandfireproxy.js"
 
 var querystring = require("querystring");
@@ -7,7 +9,7 @@ const PagingButtons =
     (props) =>
     {
         var makeButton = (target, label) =>
-            <button onClick={() => props.getPage(target)}>
+            <button onClick={() => props.getPage(target)} className="btn btn-primary">
                 {label}
             </button>;
 
@@ -19,7 +21,7 @@ const PagingButtons =
 
         return (
             <div>
-                <div>{buttons}</div>
+                <div className="btn-group pull-right">{buttons}</div>
                 <div><small>Current Page: {props.paging.currentPage}</small></div>
             </div>
         );
@@ -28,7 +30,7 @@ const PagingButtons =
 const CharacterRow =
     (props) =>
         <tr>
-            <td>{props.name || props.aliases[0]}</td>
+            <td><Link to={`/characters/${props.id}`}>{props.name}</Link></td>
             <td>{props.gender}</td>
             <td>{props.culture}</td>
             <td>{props.born}</td>
@@ -52,32 +54,13 @@ export default class CharacterTable extends Component {
     }
 
     getPage (pageInfo) {
-        var reHeaderLink = /^<(http(?:s)?:\/\/[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]{2,}\/[-a-zA-Z0-9%_\.#//]*[-a-zA-Z0-9:%_\+.~#?&//=]*)>; rel=\"([a-zA-Z]+)\"/;
-
         IceAndFireProxy
             .getCharacters({pageSize: pageInfo.pageSize, page: pageInfo.page })
             .then(response => {
-                var paging =
-                    response
-                        .headers
-                        .link
-                        .split(", ")
-                        .map(item => reHeaderLink.exec(item))
-                        .reduce((o, match) => {
-                            var url = match[1];
-                            var pageInfo = querystring.parse(url.split("?")[1]);
-                            pageInfo.url = url;
-                            o[match[2]] = pageInfo;
-                            return o;
-                        }, { currentPage: pageInfo.page, pageSize: pageInfo.pageSize });
-
-                this.setState({
-                    characters: response.data,
-                    paging: paging
-                });
+                this.setState(response);
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             });
     }
 
@@ -88,39 +71,45 @@ export default class CharacterTable extends Component {
     render () {
         return (
             <div>
-                <div>
-                    <label>
-                        Page Size:&nbsp;
-                        <select value={this.state.paging.pageSize}
-                                onChange={this.setPageSize.bind(this)}>
-                            <option>10</option>
-                            <option>25</option>
-                            <option>50</option>
-                            <option>100</option>
-                        </select>
-                    </label>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Culture</th>
-                            <th>Born</th>
-                            <th>Died</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.characters.length > 0
-                            ? this.state.characters.map(CharacterRow)
-                            : <tr>
-                                <td colSpan="5">No characters found</td>
-                            </tr>}
-                    </tbody>
-                    <tfoot>
+                <Route path={`${this.props.match.url}/:id`} component={CharacterDetail} />
+                <Route exact path={`${this.props.match.url}`} render={() =>
+                    <div>
+                        <div className="form-inline">
+                            <div className="form-group">
+                                <label>
+                                    Page Size:&nbsp;
+                                    <select value={this.state.paging.pageSize}
+                                            onChange={this.setPageSize.bind(this)}
+                                            className="form-control">
+                                        <option>10</option>
+                                        <option>25</option>
+                                        <option>50</option>
+                                        <option>100</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <table className="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Gender</th>
+                                    <th>Culture</th>
+                                    <th>Born</th>
+                                    <th>Died</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.characters.length > 0
+                                    ? this.state.characters.map(CharacterRow)
+                                    : <tr>
+                                        <td colSpan="5">No characters found</td>
+                                    </tr>}
+                            </tbody>
+                        </table>
                         <PagingButtons getPage={this.getPage.bind(this)} paging={this.state.paging} />
-                    </tfoot>
-                </table>
+                    </div>
+                } />
             </div>
         );
     }
