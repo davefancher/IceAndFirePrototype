@@ -26,9 +26,26 @@ function getCachedItem(key, getter) {
     );
 }
 
+export function getCharacterById(id) {
+    var requestUrl = apiUrl + "characters/" + id.toString();
+
+    return getCachedItem(
+        requestUrl,
+        () =>
+            axios.get(
+                requestUrl,
+                { headers: {
+                    "accept": "application/vnd.anapioficeandfire+json; version=1"
+                }
+            }).then(response =>
+                ({
+                    character: response.data
+                })
+            ));
+}
+
 export function getCharacters(search) {
-    var qs = querystring.stringify(search);
-    var requestUrl = apiUrl + "characters?" + qs;
+    var requestUrl = apiUrl + "characters?" + querystring.stringify(search);
 
     return getCachedItem(
         requestUrl,

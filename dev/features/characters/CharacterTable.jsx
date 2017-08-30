@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
-import CharacterDetail from "./CharacterDetail.jsx";
+import CharacterDetailContainer from "./CharacterDetail.jsx";
 import * as IceAndFireProxy from "../../util/iceandfireproxy.js"
 
 var querystring = require("querystring");
@@ -40,7 +40,7 @@ const CharacterRow =
 const CharacterTable =
     (props) =>
         <div>
-            <Route path={`${props.match.url}/:id`} component={CharacterDetail} />
+            <Route path={`${props.match.url}/:id`} component={CharacterDetailContainer} />
             <Route exact path={`${props.match.url}`} render={() =>
             <div>
                 <div className="form-inline">
