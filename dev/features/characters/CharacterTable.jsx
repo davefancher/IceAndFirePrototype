@@ -37,7 +37,51 @@ const CharacterRow =
             <td>{props.died}</td>
         </tr>;
 
-export default class CharacterTable extends Component {
+const CharacterTable =
+    (props) =>
+        <div>
+            <Route path={`${props.match.url}/:id`} component={CharacterDetail} />
+            <Route exact path={`${props.match.url}`} render={() =>
+            <div>
+                <div className="form-inline">
+                    <div className="form-group">
+                        <label>
+                            Page Size:&nbsp;
+                            <select value={props.paging.pageSize}
+                                    onChange={props.setPageSize}
+                                    className="form-control">
+                                <option>10</option>
+                                <option>25</option>
+                                <option>50</option>
+                                <option>100</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <table className="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Culture</th>
+                            <th>Born</th>
+                            <th>Died</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {props.characters.length > 0
+                            ? props.characters.map(CharacterRow)
+                            : <tr>
+                                <td colSpan="5">No characters found</td>
+                            </tr>}
+                    </tbody>
+                </table>
+                <PagingButtons getPage={props.getPage} paging={props.paging} />
+            </div>
+        } />
+    </div>
+
+export default class CharacterTableContainer extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -70,47 +114,13 @@ export default class CharacterTable extends Component {
 
     render () {
         return (
-            <div>
-                <Route path={`${this.props.match.url}/:id`} component={CharacterDetail} />
-                <Route exact path={`${this.props.match.url}`} render={() =>
-                    <div>
-                        <div className="form-inline">
-                            <div className="form-group">
-                                <label>
-                                    Page Size:&nbsp;
-                                    <select value={this.state.paging.pageSize}
-                                            onChange={this.setPageSize.bind(this)}
-                                            className="form-control">
-                                        <option>10</option>
-                                        <option>25</option>
-                                        <option>50</option>
-                                        <option>100</option>
-                                    </select>
-                                </label>
-                            </div>
-                        </div>
-                        <table className="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Gender</th>
-                                    <th>Culture</th>
-                                    <th>Born</th>
-                                    <th>Died</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.characters.length > 0
-                                    ? this.state.characters.map(CharacterRow)
-                                    : <tr>
-                                        <td colSpan="5">No characters found</td>
-                                    </tr>}
-                            </tbody>
-                        </table>
-                        <PagingButtons getPage={this.getPage.bind(this)} paging={this.state.paging} />
-                    </div>
-                } />
-            </div>
-        );
+            <CharacterTable
+                setPageSize={this.setPageSize.bind(this)}
+                getPage={this.getPage.bind(this)}
+                characters={this.state.characters}
+                paging={this.state.paging}
+                {...this.props}
+            />)
+        ;
     }
 }
