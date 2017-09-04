@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.jsx",
   "scripts": {
-    "build": "./node_modules/webpack/bin/webpack.js -p",
+    "build": "./node_modules/webpack/bin/webpack.js",
     "start": "node server.js"
   },
   "author": "",
@@ -19,6 +19,7 @@
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "sass-loader": "^6.0.6",

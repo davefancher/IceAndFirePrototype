@@ -37,8 +37,7 @@ export function getCharacterById(id) {
                 { headers: {
                     "accept": "application/vnd.anapioficeandfire+json; version=1"
                 }
-            }).then(response =>
-                ({
+            }).then(response => ({
                     character: response.data
                 })
             ));
@@ -80,11 +79,11 @@ export function getCharacters(search) {
                             pageInfo.url = url;
                             o[match[2]] = pageInfo;
                             return o;
-                        }, { currentPage: search.page, pageSize: search.pageSize });
-    
+                        }, { page: search.page, pageSize: search.pageSize });
+
                 return {
                     characters: characters,
-                    paging: paging
+                    pagination: paging
                 };
             }));
 }

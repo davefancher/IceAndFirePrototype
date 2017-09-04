@@ -6,7 +6,8 @@ var DEV = path.resolve(__dirname, "dev");
 var DIST = path.resolve(__dirname, "dist");
  
 module.exports = {
-  entry: [ DEV + "/index.jsx", DEV + "/styles/site.scss" ],
+  entry: [ DEV + "/index.jsx", DEV + "/site.scss" ],
+  devtool: "source-map",
   output: {
     path: DIST,
     filename: "iceandfire.js"
@@ -25,6 +26,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin("iceandfire.css", { allChunks: true })
+    new ExtractTextPlugin("iceandfire.css", { allChunks: true }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        "NODE_ENV": JSON.stringify("debug")
+    }})
   ]
 };
