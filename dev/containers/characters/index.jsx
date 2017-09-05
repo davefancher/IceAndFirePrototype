@@ -1,43 +1,34 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
-import * as IceAndFireProxy from "../../iceandfireproxy.js"
+import { connect } from "react-redux"
+import { fetchCharacters, fetchCharacter } from "../../actions/characters.js";
 import { CharacterTable } from "../../components/characters/list/index.jsx";
 import { CharacterDetails } from "../../components/characters/detail/index.jsx";
 
-export default class CharacterHome extends Component {
+class CharacterHome extends Component {
     constructor (props) {
         super(props);
-        this.state = {
-            characters: [],
-            character: {
-                name: "",
-                aliases: []
-            },
-            pagination: {
-                page: 1,
-                pageSize: 25,
-                first: "",
-                prev: "",
-                next: "",
-                last: ""
-            }
-        };
+
+        this.getPage = this.getPage.bind(this);
+        this.getCharacter = this.getCharacter.bind(this);
+    }
+
+    componentDidMount() {
+        //debugger;
+        //this.props.fetchCharacters({ pageSize:  })
     }
 
     getPage (pageInfo) {
-        IceAndFireProxy
-            .getCharacters({pageSize: pageInfo.pageSize, page: pageInfo.page })
-            .then(response => this.setState(response))
-            .catch(err => console.error(err));
+        this.props.fetchCharacters(pageInfo);
     }
 
     getCharacter (characterId) {
         if(!characterId) return;
 
-        IceAndFireProxy
-            .getCharacterById(characterId)
-            .then(response => this.setState(response))
-            .catch(err => console.error(err));
+        // IceAndFireProxy
+        //     .getCharacterById(characterId)
+        //     .then(response => this.setState(response))
+        //     .catch(err => console.error(err));
     }
 
     render () {
@@ -45,9 +36,9 @@ export default class CharacterHome extends Component {
             <Switch>
                 <Route exact path={this.props.match.url} render={props => (
                         <CharacterTable
-                            getPage={this.getPage.bind(this)}
-                            characters={this.state.characters}
-                            pagination={this.state.pagination}
+                            getPage={this.getPage}
+                            characters={this.props.characters}
+                            pagination={this.props.pagination}
                         />
                     )
                 } />
@@ -61,3 +52,12 @@ export default class CharacterHome extends Component {
             </Switch>);
     }
 }
+
+const mapStateToProps =
+    state => ({
+        characters: state.characters.characters,
+        character: state.characters.character,
+        pagination: state.characters.pagination,
+    });
+
+export default connect(mapStateToProps, { fetchCharacters, fetchCharacter })(CharacterHome);
