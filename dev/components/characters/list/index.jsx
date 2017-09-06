@@ -60,6 +60,20 @@ export class CharacterTable extends Component {
 
         return (
             <div>
+                <div className="form-horizontal">
+                    <div className="form-group">
+                        <label htmlFor="pageSizeSelect" className="col-sm-2">Items Per Page:</label>
+                        <div className="col-sm-10">
+                            <select id="pageSizeSelect"
+                                    value={this.props.pagination.pageSize}
+                                    onChange={this.props.changePageSize}>
+                                <option>10</option>
+                                <option>25</option>
+                                <option>50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <table className="table table-striped table-bordered">
                     <thead>
                         <tr>

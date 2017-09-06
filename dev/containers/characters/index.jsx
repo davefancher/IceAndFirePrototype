@@ -12,11 +12,16 @@ class CharacterHome extends Component {
 
         this.getPage = this.getPage.bind(this);
         this.getCharacter = this.getCharacter.bind(this);
+        this.changePageSize = this.changePageSize.bind(this);
     }
 
     getPage (pageInfo) {
         this.props.fetchCharacters(pageInfo);
     }
+
+    changePageSize (event) { 
+        this.getPage({ pageSize: event.target.value, page: 1}); 
+    } 
 
     getCharacter (characterId) {
         if(!characterId) return;
@@ -32,6 +37,7 @@ class CharacterHome extends Component {
                     <Route exact path={this.props.match.url} render={props => (
                         <CharacterTable
                             getPage={this.getPage}
+                            changePageSize={this.changePageSize}
                             {...this.props} />
                         )
                     } />
