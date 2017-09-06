@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux"
-import { fetchCharacters, fetchCharacter } from "../../actions/characters.js";
+import { fetchCharacters, fetchSingleCharacter } from "../../actions/characters.js";
 import { CharacterTable } from "../../components/characters/list/index.jsx";
 import { CharacterDetails } from "../../components/characters/detail/index.jsx";
 
@@ -13,11 +13,6 @@ class CharacterHome extends Component {
         this.getCharacter = this.getCharacter.bind(this);
     }
 
-    componentDidMount() {
-        //debugger;
-        //this.props.fetchCharacters({ pageSize:  })
-    }
-
     getPage (pageInfo) {
         this.props.fetchCharacters(pageInfo);
     }
@@ -25,10 +20,7 @@ class CharacterHome extends Component {
     getCharacter (characterId) {
         if(!characterId) return;
 
-        // IceAndFireProxy
-        //     .getCharacterById(characterId)
-        //     .then(response => this.setState(response))
-        //     .catch(err => console.error(err));
+        this.props.fetchSingleCharacter(characterId);
     }
 
     render () {
@@ -37,6 +29,7 @@ class CharacterHome extends Component {
                 <Route exact path={this.props.match.url} render={props => (
                         <CharacterTable
                             getPage={this.getPage}
+                            loading={this.props.loading}
                             characters={this.props.characters}
                             pagination={this.props.pagination}
                         />
@@ -46,7 +39,8 @@ class CharacterHome extends Component {
                     <CharacterDetails
                         getCharacter={() => this.getCharacter(props.match.params.id) }
                         characterId={props.match.params.id}
-                        character={this.state.character} />
+                        loading={this.props.loading}
+                        character={this.props.character} />
                     )
                 } />
             </Switch>);
@@ -58,6 +52,7 @@ const mapStateToProps =
         characters: state.characters.characters,
         character: state.characters.character,
         pagination: state.characters.pagination,
+        loading: state.characters.loading
     });
 
-export default connect(mapStateToProps, { fetchCharacters, fetchCharacter })(CharacterHome);
+export default connect(mapStateToProps, { fetchCharacters, fetchSingleCharacter })(CharacterHome);

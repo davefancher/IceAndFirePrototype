@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
+import Loading from "../../shared/loading.jsx";
 
 const PaginationButtons =
     (props) =>
@@ -7,7 +8,7 @@ const PaginationButtons =
         var makeButton = (target, label) =>
             <button onClick={() => props.getPage(target)} className="btn btn-primary" key={label}>
                 {label}
-            </button>;
+            </button>;  
 
         var buttons = [];
         if (props.pagination.first) buttons.push(makeButton(props.pagination.first, "First"));
@@ -53,6 +54,10 @@ export class CharacterTable extends Component {
     }
 
     render () {
+        if (this.props.loading) {
+            return <Loading />;
+        }
+
         return (
             <div>
                 <table className="table table-striped table-bordered">

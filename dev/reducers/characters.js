@@ -1,7 +1,7 @@
-import { FETCH_CHARACTERS, FETCH_CHARACTER } from "../actions/characters.js";
+import { FETCH_CHARACTERS, FETCH_SINGLE_CHARACTER } from "../actions/characters.js";
 
 const INITIAL_STATE = {
-    loading: false,
+    loading: true,
     characters: [],
     character: {
         name: "",
@@ -27,7 +27,6 @@ export default function (state = INITIAL_STATE, action) {
             };
 
         case FETCH_CHARACTERS.SUCCESS:
-            //debugger;
             return {
                 ...state,
                 loading: false,
@@ -54,7 +53,7 @@ export default function (state = INITIAL_STATE, action) {
                 errorMessage: action.error
             };
 
-        case FETCH_CHARACTER.REQUEST:
+        case FETCH_SINGLE_CHARACTER.REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -65,15 +64,15 @@ export default function (state = INITIAL_STATE, action) {
                 }
             };
 
-        case FETCH_CHARACTER.SUCCESS:
+        case FETCH_SINGLE_CHARACTER.SUCCESS:
             return {
                 ...state,
-                loading: true,
+                loading: false,
                 characters: [],
                 character: action.character
             };
 
-        case FETCH_CHARACTER.FAILURE:
+        case FETCH_SINGLE_CHARACTER.FAILURE:
             return {
                 ...state,
                 loading: false,
@@ -81,7 +80,8 @@ export default function (state = INITIAL_STATE, action) {
                 character: {
                     name: "",
                     aliases: []
-                }
+                },
+                errorMessage: action.error
             };
     }
 

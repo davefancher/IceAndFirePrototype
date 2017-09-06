@@ -10,7 +10,7 @@ function createRequestTypes (prefix) {
 }
 
 // Action Type Constants
-export const FETCH_CHARACTER = createRequestTypes("FETCH_CHARACTER");
+export const FETCH_SINGLE_CHARACTER = createRequestTypes("FETCH_SINGLE_CHARACTER");
 export const FETCH_CHARACTERS = createRequestTypes("FETCH_CHARACTERS");
 
 
@@ -42,34 +42,24 @@ export const fetchCharacters =
                     .catch(err => dispatch(fetchCharactersFailure(err)))
             );
         };
-    
-// export const dispatchFetchCharactersRequest =
-//     () => dispatch(fetchCharactersRequest());
-
-// export const dispatchFetchCharactersSuccess =
-//     response => dispatch(fetchCharactersSuccess(response));
-
-// export const dispatchFetchCharactersFailure =
-//     error => dispatch(fetchCharactersFailure(error));
-
 
 // Fetch Character Actions
 const fetchCharacterRequest =
-    () => ({ type: FETCH_CHARACTER.REQUEST });
+    () => ({ type: FETCH_SINGLE_CHARACTER.REQUEST });
 
 const fetchCharacterSuccess =
     response => ({
-        type: FETCH_CHARACTER.SUCCESS,
+        type: FETCH_SINGLE_CHARACTER.SUCCESS,
         character: response.character
     });
 
 const fetchCharacterFailure =
     error => ({
-        type: FETCH_CHARACTER.FAILURE,
+        type: FETCH_SINGLE_CHARACTER.FAILURE,
         error: error
     });
 
-export const fetchCharacter =
+export const fetchSingleCharacter =
     id =>
         dispatch => {
             dispatch(fetchCharacterRequest());
@@ -80,13 +70,3 @@ export const fetchCharacter =
                     .catch(err => dispatch(fetchCharacterFailure(err)))
             );
         };
-
-
-// export const dispatchFetchCharacterRequest =
-//     () => dispatch(fetchCharacterRequest());
-
-// export const dispatchFetchCharacterSuccess =
-//     response => dispatch(fetchCharacterSuccess(response));
-
-// export const dispatchFetchCharacterError =
-//     error => dispatch(fetchCharacterFailure(error));
