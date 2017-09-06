@@ -50,7 +50,7 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 loading: false,
                 characters: [],
-                errorMessage: action.error
+                errorMessage: action.error.message
             };
 
         case FETCH_SINGLE_CHARACTER.REQUEST:
@@ -81,7 +81,7 @@ export default function (state = INITIAL_STATE, action) {
                     name: "",
                     aliases: []
                 },
-                errorMessage: action.error
+                errorMessage: action.error.message
             };
     }
 
