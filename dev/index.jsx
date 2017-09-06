@@ -19,19 +19,21 @@ ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
             <div>
-                <ul className="nav nav-tabs">
+                <ul className="list-inline navMenu">
                     <li role="presentation">
                         <NavLink exact to="/" activeClassName="active">Home</NavLink>
                     </li>
                     <li role="presentation">
-                        <NavLink to="/characters"  activeClassName="active">Characters</NavLink>
+                        <NavLink to="/characters" activeClassName="active">Characters</NavLink>
                     </li>
                 </ul>
 
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route path="/characters" component={CharacterHome} />
-                </Switch>
+                <div className="iceAndFireBody">
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route path="/characters" component={CharacterHome} />
+                    </Switch>
+                </div>
             </div>
         </BrowserRouter>
     </Provider>,
