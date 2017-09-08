@@ -1,13 +1,5 @@
-import * as IceAndFireProxy from "../iceandfireproxy.js"
-
-function createRequestTypes (prefix) {
-    return (
-        ["REQUEST", "SUCCESS", "FAILURE"]
-            .reduce(
-                (obj, type) => { obj[type] = `${prefix}_${type}`; return obj; },
-                {})
-    );
-}
+import { createRequestTypes } from "./helper.js";
+import IceAndFireRepository from "../IceAndFireRepository.js";
 
 // Action Type Constants
 export const FETCH_SINGLE_CHARACTER = createRequestTypes("FETCH_SINGLE_CHARACTER");
@@ -36,8 +28,9 @@ export const fetchCharacters =
         dispatch => {
             dispatch(fetchCharacterRequest());
             return (
-                IceAndFireProxy
-                    .getCharacters({pageSize: pageInfo.pageSize, page: pageInfo.page })
+                IceAndFireRepository
+                    .characters
+                    .get(pageInfo)
                     .then(response => dispatch(fetchCharactersSuccess(response)))
                     .catch(err => dispatch(fetchCharactersFailure(err)))
             );
@@ -64,9 +57,13 @@ export const fetchSingleCharacter =
         dispatch => {
             dispatch(fetchCharacterRequest());
             return (
-                IceAndFireProxy
-                    .getCharacterById(id)
-                    .then(response => dispatch(fetchCharacterSuccess(response)))
+                IceAndFireRepository
+                    .characters
+                    .get(id)
+                    .then(response => {
+                        var data = { character: response[0] };
+                        dispatch(fetchCharacterSuccess(data));
+                    })
                     .catch(err => dispatch(fetchCharacterFailure(err)))
             );
         };

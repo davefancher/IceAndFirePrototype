@@ -43,7 +43,7 @@ class CharacterHome extends Component {
                     } />
                     <Route path={`${this.props.match.url}/:id`} render={props => (
                         <CharacterDetails
-                            getCharacter={() => this.getCharacter(props.match.params.id) }
+                            getCharacter={() => this.getCharacter(parseInt(props.match.params.id, 10)) }
                             characterId={props.match.params.id}
                             {...this.props} />
                         )

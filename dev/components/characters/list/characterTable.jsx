@@ -30,8 +30,8 @@ const CharacterRow =
             <td><Link to={`/characters/${character.id}`}>{character.name}</Link></td>
             <td>{character.gender}</td>
             <td>{character.culture}</td>
-            <td>{character.born}</td>
-            <td>{character.died}</td>
+            <td>{(character.born ? (character.born.date ? character.born.date : "") + (character.born.location ? character.born.location : "") : "")}</td>
+            <td>{(character.died ? (character.died.date ? character.died.date : "") + (character.died.location ? character.died.location : "") : "")}</td>
         </tr>;
 
 const NoCharacters =

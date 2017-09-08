@@ -23,13 +23,15 @@ export default function (state = INITIAL_STATE, action) {
         case FETCH_CHARACTERS.REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                errorMessage: ""
             };
 
         case FETCH_CHARACTERS.SUCCESS:
             return {
                 ...state,
                 loading: false,
+                errorMessage: "",
                 characters: action.characters,
                 pagination: {
                     first: action.pagination.first,
@@ -57,6 +59,7 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 loading: true,
+                errorMessage: "",
                 characters: [],
                 character: {
                     name: "",
@@ -68,6 +71,7 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 loading: false,
+                errorMessage: "",
                 characters: [],
                 character: action.character
             };
