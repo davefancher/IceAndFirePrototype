@@ -5,8 +5,9 @@ import Loading from "../../shared/loading.jsx";
 const PaginationButtons =
     (props) =>
     {
+        var pageSize = props.pagination.pageSize;
         var makeButton = (target, label) =>
-            <button onClick={() => props.getPage(target)} className="btn btn-primary" key={label}>
+            <button onClick={() => props.getPage({ page: target, pageSize: pageSize })} className="btn btn-primary" key={label}>
                 {label}
             </button>;  
 
