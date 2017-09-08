@@ -6,8 +6,8 @@ import thunkMiddleware from "redux-thunk";
 import { createStore, applyMiddleware } from "redux";
 
 import reducers from "./reducers";
-import Home from "./components/home/index.jsx";
-import CharacterHome from "./containers/characters/index.jsx";
+import Home from "./components/home/home.jsx";
+import CharacterHome from "./containers/characters/characterHome.jsx";
 
 const store =
     createStore(

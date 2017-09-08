@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchCharacters, fetchSingleCharacter } from "../../actions/characters.js";
-import { CharacterTable } from "../../components/characters/list/index.jsx";
-import { CharacterDetails } from "../../components/characters/detail/index.jsx";
+import { CharacterTable } from "../../components/characters/list/characterTable.jsx";
+import { CharacterDetails } from "../../components/characters/detail/characterDetails.jsx";
 import ErrorMessage from "../../components/shared/errorMessage.jsx";
 
 class CharacterHome extends Component {
