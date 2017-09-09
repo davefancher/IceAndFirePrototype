@@ -1,4 +1,9 @@
-import { FETCH_CHARACTERS, FETCH_SINGLE_CHARACTER } from "../actions/characters.js";
+import {
+    FETCH_CHARACTERS,
+    FETCH_SINGLE_CHARACTER,
+    STORE_CHARACTER,
+    REMOVE_CHARACTER
+} from "../actions/characters.js";
 
 const INITIAL_STATE = {
     loading: true,
@@ -80,13 +85,48 @@ export default function (state = INITIAL_STATE, action) {
             return {
                 ...state,
                 loading: false,
-                characters: [],
-                character: {
-                    name: "",
-                    aliases: []
-                },
+                character: {},
                 errorMessage: action.error.message
             };
+
+        case STORE_CHARACTER.REQUEST:
+            return {
+                ...state,
+                loading: true
+            };
+
+        case STORE_CHARACTER.SUCCESS:
+            return {
+                ...state,
+                loading: false
+            };
+
+        case STORE_CHARACTER.FAILURE:
+            return {
+                ...state,
+                loading: false,
+                character: action.character,
+                errorMessage: action.error.message
+            }
+
+        case REMOVE_CHARACTER.REQUEST:
+            return {
+                ...state,
+                loading: true
+            };
+
+        case REMOVE_CHARACTER.SUCCESS:
+            return {
+                ...state,
+                loading: false
+            };
+
+        case REMOVE_CHARACTER.FAILURE:
+            return {
+                ...state,
+                loading: false,
+                errorMessage: action.error.message
+            }
     }
 
     return state;

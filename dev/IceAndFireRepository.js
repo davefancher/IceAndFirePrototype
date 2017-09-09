@@ -6,8 +6,32 @@ const API_VERSION_HEADER = "application/vnd.anapioficeandfire+json; version=1";
 
 const reHeaderLink = /^<(http(?:s)?:\/\/[a-zA-Z0-9-_\.]+\.[a-zA-Z0-9]{2,}\/[-a-zA-Z0-9%_\.#//]*[-a-zA-Z0-9:%_\+.~#?&//=]*)>; rel=\"([a-zA-Z]+)\"/;
 
+function getRandomInt(min, max) {
+    var adjustedMin = Math.ceil(min);
+    var adjustedMax = Math.floor(max);
+    return Math.floor(Math.random() * (adjustedMax - adjustedMin + 1)) + adjustedMin;
+}
+
 function range(start, end) {
     return Array(end - start).fill(0).map((v, ix) => start + ix);
+}
+
+function maxBy(collection, selector) {
+    return (
+        collection.reduce(
+            (max, current) => Math.max(max, selector(current)),
+            0
+        )
+    );
+}
+
+function simulateNetworkRequest(op) {
+    return new Promise(resolve => {
+        setTimeout(
+            () => resolve(op()),
+            getRandomInt(250, 1000)
+        );
+    })
 }
 
 function getPage(section, page, pageSize) {
@@ -20,6 +44,11 @@ function getPage(section, page, pageSize) {
                 "accept": API_VERSION_HEADER
             }}
     ));
+}
+
+function serializeToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+    return value;
 }
 
 function loadData(section, munger) {
@@ -73,8 +102,7 @@ function loadData(section, munger) {
                                             return 0;
                                         });
                                 
-                                localStorage.setItem(section, JSON.stringify(characters));
-                                return characters;
+                                return serializeToLocalStorage(section, characters);
                             }));
             }));
 }
@@ -154,34 +182,52 @@ function query (collection, filter) {
             }
         };
     }
-};
+}
 
 function queryAsync (collection, filter) {
-    return new Promise((resolve, reject) => {
-        setTimeout(
-            () => {
-                var result = query(collection, filter);
-                resolve(result)
-            },
-            1000
-        )
-    });
+    return simulateNetworkRequest(() => query(collection, filter));
 }
 
 function store(collection, obj) {
-    throw "Not Implemented";
+    if(!obj.id) {
+        var newId = maxBy(collection, i => i.id) + 1;
+        obj.id = newId;
+        collection.push(obj);
+
+        return collection;
+    }
+    
+    return collection.map(i => i.id === obj.id ? i : obj);
+}
+
+function storeAsync (collection, obj) {
+    return simulateNetworkRequest(() => store(collection, obj));
 }
 
 function remove(collection, obj) {
-    throw "Not Implemented";
+    return collection.filter(i => i.id !== obj.id);
+}
+
+function removeAsync (collection, obj) {
+    return simulateNetworkRequest(() => remove(collection, obj));
 }
 
 const IceAndFireRepository = {
     init: (() => Promise.all([ loadCharacterData() ])),
     characters: {
         get: (filter => queryAsync(_allCharacters, filter)),
-        store: (character => store(_allCharacters, character)),
-        remove: (character => remove(_allCharacters, character)),
+        store: (character =>
+                    storeAsync(_allCharacters, character)
+                        .then(c => {
+                            _allCharacters = serializeToLocalStorage("characters", c);
+                            return character;
+                        })),
+        remove: (character =>
+                    removeAsync(_allCharacters, character)
+                        .then(c => {
+                            _allCharacters = serializeToLocalStorage("characters", c);
+                            return true;
+                        })),
     }
 };
 
