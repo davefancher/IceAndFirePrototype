@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import Loading from "../../shared/loading.jsx";
+import LifeEventField from "../lifeEventField.jsx";
 
 const PaginationButtons =
     (props) =>
@@ -10,7 +11,6 @@ const PaginationButtons =
             <button onClick={() => props.getPage({ page: target, pageSize: pageSize })} className="btn btn-primary" key={label}>
                 {label}
             </button>;  
-
         var buttons = [];
         if (props.pagination.first) buttons.push(makeButton(props.pagination.first, "First"));
         if (props.pagination.prev) buttons.push(makeButton(props.pagination.prev, "Previous"));
@@ -26,13 +26,24 @@ const PaginationButtons =
     };
 
 const CharacterRow =
-    (character) =>
-        <tr key={character.id}>
-            <td><Link to={`/characters/${character.id}`}>{character.name}</Link></td>
-            <td>{character.gender}</td>
-            <td>{character.culture}</td>
-            <td>{(character.born ? (character.born.date ? character.born.date : "") + (character.born.location ? character.born.location : "") : "")}</td>
-            <td>{(character.died ? (character.died.date ? character.died.date : "") + (character.died.location ? character.died.location : "") : "")}</td>
+    (props) =>
+        <tr key={props.id}>
+            <td>
+                <Link to={`/characters/${props.id}`}>
+                    {(props.name ? props.name : <i>{props.aliases[0]}</i>)}
+                </Link></td>
+            <td>{props.gender}</td>
+            <td>{props.culture}</td>
+            <td>
+                <LifeEventField
+                    date={props.birthDate}
+                    location={props.birthLocation} />
+            </td>
+            <td>
+                <LifeEventField
+                    date={props.deathDate}
+                    location={props.deathLocation} />
+            </td>
         </tr>;
 
 const NoCharacters =

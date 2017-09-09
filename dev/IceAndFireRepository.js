@@ -110,7 +110,10 @@ function loadData(section, munger) {
 var _allCharacters;
 function loadCharacterData() {
     function parseDate(date) {
-        if (!date) return null;
+        if (!date) return {
+            "date": null,
+            "location": null
+        };
 
         var dateParts = date.split(",").map(p => p.trim());
         if (dateParts.length === 2) {
@@ -121,27 +124,46 @@ function loadCharacterData() {
         }
 
         if(dateParts[0].match(/[iI]n/)) {
-            return { "date": dateParts[0] };
+            return {
+                "date": dateParts[0],
+                "location": null
+            };
         }
 
         if(dateParts[0].match(/[aA]t/)) {
-            return { "location": dateParts[0] };
+            return {
+                "date": null,
+                "location": dateParts[0]
+            };
+        }
+
+        // Not ideal but good enough for the workshop
+        return {
+            "date": null,
+            "location": null
         }
     }
 
+    function extractIdFromUrl(url) {
+        var parts = url.split("/");
+        var id =  parts[parts.length - 1];
+        return parseInt(id, 10);
+    }
+
     function munge(characterRaw) {
+        var birthInfo = parseDate(characterRaw.born);
+        var deathInfo = parseDate(characterRaw.died);
+
         return {
-            id: (url => {
-                    var parts = url.split("/");
-                    var id =  parts[parts.length - 1];
-                    return parseInt(id, 10);
-                })(characterRaw.url),
+            id: extractIdFromUrl(characterRaw.url),
             name: characterRaw.name,
             aliases: characterRaw.aliases.filter(a => a.length !== 0),
             gender: characterRaw.gender,
             culture: characterRaw.culture,
-            born: parseDate(characterRaw.born),
-            died: parseDate(characterRaw.died),
+            birthDate: birthInfo.date,
+            birthLocation: birthInfo.location,
+            deathDate: deathInfo.date,
+            deathLocation: deathInfo.location,
             titles: characterRaw.titles.filter(t => t.length !== 0),
             portrayedBy: characterRaw.playedBy.filter(a => a.length !== 0)
         }

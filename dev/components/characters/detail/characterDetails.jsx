@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Loading from "../../shared/loading.jsx";
+import LifeEventField from "../lifeEventField.jsx";
 
 const List = (props) => {
     if (props.length === 0) return null;
@@ -19,11 +20,13 @@ const List = (props) => {
     )
 }
 const PropertyGroup = (props) => {
-    if (!props.value) return null;
-
     var content = null;
 
-    if(Array.isArray(props.value)) {
+    if(props.children) {
+        content = props.children;
+    } else if (!props.value) {
+        return null;
+    } else if(Array.isArray(props.value)) {
         content = List(props.value);
     } else if (props.value.location && props.value.date) {
         content = <div>{props.value.date}<br />{props.value.location}</div>;
@@ -53,18 +56,28 @@ export class CharacterDetails extends Component {
            return <Loading />;
         }
 
+        var character = this.props.character;
+
         return (
             <div>
-                <h2>{this.props.character.name}</h2>
+                <h2>{character.name ? character.name : <i>{character.aliases[0]}*</i>}</h2>
                 <dl className="dl-horizontal">
-                    <PropertyGroup title="Gender" value={this.props.character.gender} />
-                    <PropertyGroup title="Culture" value={this.props.character.culture} />
-                    <PropertyGroup title="Born" value={this.props.character.born} />
-                    <PropertyGroup title="Died" value={this.props.character.died} />
-                    <PropertyGroup title="Aliases" value={this.props.character.aliases} />
-                    <PropertyGroup title="Titles" value={this.props.character.titles} />
-                    <PropertyGroup title="Portrayed By" value={this.props.character.portrayedBy} />
+                    <PropertyGroup title="Gender" value={character.gender} />
+                    <PropertyGroup title="Culture" value={character.culture} />
+                    <PropertyGroup title="Born">
+                        <LifeEventField date={character.birthDate}
+                                        location={character.birthLocation} />
+                    </PropertyGroup>
+                    <PropertyGroup title="Died">
+                        <LifeEventField date={character.deathDate}
+                                        location={character.deathLocation} />
+                    </PropertyGroup>
+                    <PropertyGroup title="Aliases" value={character.aliases} />
+                    <PropertyGroup title="Titles" value={character.titles} />
+                    <PropertyGroup title="Portrayed By" value={character.portrayedBy} />
                 </dl>
+
+                {character.name ? "" : <p className="pull-right"><small className="text-muted">* - Name unknown, using alias instead</small></p>}
             </div>
         );
     }
