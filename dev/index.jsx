@@ -7,6 +7,10 @@ import thunkMiddleware from "redux-thunk";
 import reducers from "./reducers.js";
 import AppContainer from "./containers/appContainer.jsx";
 
+if (process.env.NODE_ENV === "debug") {
+    require("./site.scss");
+}
+
 const store =
     createStore(
         reducers,

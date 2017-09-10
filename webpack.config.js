@@ -1,32 +1,46 @@
 var webpack = require("webpack");
 var path = require("path");
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var DEV = path.resolve(__dirname, "dev");
 var DIST = path.resolve(__dirname, "dist");
  
 module.exports = {
-  entry: [ DEV + "/index.jsx", DEV + "/site.scss" ],
-  devtool: "source-map",
+  entry: [
+    'react-hot-loader/patch',
+    'webpack-dev-server/client?http://localhost:8080',
+    'webpack/hot/only-dev-server',
+    DEV + "/index.jsx",
+    DEV + "/site.scss"
+  ],
+  devtool: "inline-source-maps",
   output: {
     path: DIST,
-    filename: "iceandfire.js"
+    filename: "iceandfire.js",
+    publicPath: '/'
   },
   module: {
     loaders: [
       {
         test: /\.js[x]?$/,
-        exclude: /(node_modules)/,
+        include: path.join(__dirname, 'dev'),
         loaders: "babel-loader"
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("css-loader!sass-loader")
+        use: [{
+            loader: "style-loader"
+        }, {
+            loader: "css-loader"
+        }, {
+            loader: "sass-loader"
+        }]
       }
     ]
   },
   plugins: [
-    new ExtractTextPlugin("iceandfire.css", { allChunks: true }),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       "process.env": {
         "NODE_ENV": JSON.stringify("debug")
